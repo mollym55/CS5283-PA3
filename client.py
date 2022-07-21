@@ -81,8 +81,8 @@ class Client:
   def send_reliable_message(self, message):
     # header could reuse seq so far, or just start back at 0 for sending message as this does
     # but need to keep track of the sequence number when doing 
-    msg_header = utils.Header(0, 0, syn = 0, ack = 0, fin = 0)
-    send_udp(msg_header.bits() + message.encode())
+    #msg_header = utils.Header(0, 0, syn = 0, ack = 0, fin = 0)
+    #send_udp(msg_header.bits() + message.encode())
     
     
     # handle mss to send in pieces
@@ -98,7 +98,7 @@ class Client:
 
   timeout_value = 1 
   sock.settimeout(timeout_value) # measured in seconds
-  chunk = list(chunkstring(self.message, MMS = 12))
+  chunk = list(chunkstring(message, MMS = 12))
   chunk.append('') # indicates end of message
   for i in chunk:
     msg_header = utils.Header(self.next_seq_num, self.last_received_seq_num + 1, syn = 0, ack = 0, fin = 0)
