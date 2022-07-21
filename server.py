@@ -9,6 +9,7 @@ UDP_PORT = 5005 # for testing without channel
 server_state = States.CLOSED
 last_received_seq_num = 0
 reliable_msg = {}
+final = ""
 
 sock = socket.socket(socket.AF_INET,    # Internet
                      socket.SOCK_DGRAM) # UDP
@@ -66,9 +67,9 @@ while True:
       if body == "":
           
         for key in sorted(reliable_msg.keys()):
-          final_msg += reliable_msg[key]
-        print('final message: ', final_msg)
-        final_msg = ""
+          final += reliable_msg[key]
+        print('final message: ', final)
+        final = ""
 
   elif server_state == States.CLOSE_WAIT:
     fin_fin_msg = utils.Header(seq_number, last_received_seq_num + 1, syn = 0, ack = 1, fin = 1)
