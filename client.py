@@ -93,8 +93,8 @@ class Client:
     # handle stop and wait: resend if lost, detected by no ack in time
     # recommend handling this via a recv and waiting until socket.timeout exception occurs, then resending
     
-   def chunkstring(message, size):
-      return (message[0+i:size+i] for i in range(0, len(message), size))
+  def chunkstring(message, size):
+     return (message[0+i:size+i] for i in range(0, len(message), size))
 
     timeout_value = 1 
     sock.settimeout(timeout_value) # measured in seconds
