@@ -98,7 +98,7 @@ class Client:
 
     timeout_value = 1 
     sock.settimeout(timeout_value) # measured in seconds
-    chunk = list(chunkstring(message, MMS = 12))
+    chunk = list(chunkstring(message, 12))
     chunk.append('') # indicates end of message
     for i in chunk:
       msg_header = utils.Header(self.next_seq_num, self.last_received_seq_num + 1, syn = 0, ack = 0, fin = 0)
