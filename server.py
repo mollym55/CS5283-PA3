@@ -8,6 +8,7 @@ UDP_PORT = 5005 # for testing without channel
 # initial state of the server
 server_state = States.CLOSED
 last_received_seq_num = 0
+reliable_msg = {}
 
 sock = socket.socket(socket.AF_INET,    # Internet
                      socket.SOCK_DGRAM) # UDP
