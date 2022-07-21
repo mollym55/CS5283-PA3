@@ -57,17 +57,17 @@ while True:
     else:
       # todo: handle mss and duplication when acks lost (so same data received twice, detect based on seq num)
       print('received message: ', body)
-       reliable_msg.update({header.seq_num: body})
-       ack_num = last_received_seq_num + 1
-       ack_msg = utils.Header(seq_number, ack_num, syn = 0, ack = 1, fin = 0)
-       seq_number += 1
-       sock.sendto(ack_msg.bits(), addr)
-       if body == "":
+      reliable_msg.update({header.seq_num: body})
+      ack_num = last_received_seq_num + 1
+      ack_msg = utils.Header(seq_number, ack_num, syn = 0, ack = 1, fin = 0)
+      seq_number += 1
+      sock.sendto(ack_msg.bits(), addr)
+      if body == "":
           
-         for key in sorted(reliable_msg.keys()):
-           final_msg += reliable_msg[key]
-         print('final message: ', final_msg)
-         final_msg = ""
+        for key in sorted(reliable_msg.keys()):
+          final_msg += reliable_msg[key]
+        print('final message: ', final_msg)
+        final_msg = ""
 
   elif server_state == States.CLOSE_WAIT:
     fin_fin_msg = utils.Header(seq_number, last_received_seq_num + 1, syn = 0, ack = 1, fin = 1)
