@@ -93,32 +93,32 @@ class Client:
     # handle stop and wait: resend if lost, detected by no ack in time
     # recommend handling this via a recv and waiting until socket.timeout exception occurs, then resending
     
-  def chunkstring(string, size):
-     return (string[0+i:size+i] for i in range(0, len(string), size))
+    def chunkstring(string, size):
+       return (string[0+i:size+i] for i in range(0, len(string), size))
 
-  timeout_value = 1 
-  sock.settimeout(timeout_value) # measured in seconds
-  chunk = list(chunkstring(message, MMS = 12))
-  chunk.append('') # indicates end of message
-  for i in chunk:
-    msg_header = utils.Header(self.next_seq_num, self.last_received_seq_num + 1, syn = 0, ack = 0, fin = 0)
-    send_udp(msg_header.bits() + i.encode())
-    self.next_seq_num += 1
-    while True:
-      try:
-        recv_data, addr = sock.recvfrom(1024)
-        ack_header = utils.bits_to_header(recv_data)
-        self.last_received_seq_num = ack_header.seq_num
-        if ack_header.ack == 1:
-          break
-      except socket.timeout:
-        if utils.DEBUG:
-          print('timeout reached')
-        # Resend a lost packet, timeout value reached
-        msg_header = utils.Header(self.next_seq_num, self.last_received_seq_num, syn = 0, ack = 0, fin = 0)
-        send_udp(msg_header.bits() + i.encode())
-        self.next_seq_num += 1
-        continue
+    timeout_value = 1 
+    sock.settimeout(timeout_value) # measured in seconds
+    chunk = list(chunkstring(message, MMS = 12))
+    chunk.append('') # indicates end of message
+    for i in chunk:
+      msg_header = utils.Header(self.next_seq_num, self.last_received_seq_num + 1, syn = 0, ack = 0, fin = 0)
+      send_udp(msg_header.bits() + i.encode())
+      self.next_seq_num += 1
+      while True:
+        try:
+          recv_data, addr = sock.recvfrom(1024)
+          ack_header = utils.bits_to_header(recv_data)
+          self.last_received_seq_num = ack_header.seq_num
+          if ack_header.ack == 1:
+            break
+        except socket.timeout:
+          if utils.DEBUG:
+            print('timeout reached')
+          # Resend a lost packet, timeout value reached
+          msg_header = utils.Header(self.next_seq_num, self.last_received_seq_num, syn = 0, ack = 0, fin = 0)
+          send_udp(msg_header.bits() + i.encode())
+          self.next_seq_num += 1
+          continue
 
 if __name__ == "__main__":
   client = Client()
